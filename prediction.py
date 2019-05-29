@@ -13,7 +13,7 @@
 # ==============================================================================
 
 import tensorflow as tf
-from lenet import LeNet
+
 import matplotlib.pyplot as plt
 from PIL import Image
 
@@ -49,7 +49,7 @@ def process_image(image):
   # image norm.
   image = image / 255.
   # image resize model input size.
-  image = tf.image.resize(image, (32, 32))
+  image = tf.image.resize(image, (224, 224))
   return image
 
 
@@ -67,8 +67,9 @@ def prediction(image):
   # Add the image to a batch where it's the only member.
   image = (tf.expand_dims(image, 0))
 
-  model = LeNet(input_shape=(32, 32, 3),
-                classes=args.classes)
+  model = tf.keras.applications.VGG16(input_shape=(224, 224, 3),
+                                      weights=None,
+                                      classes=args.classes)
 
   print(f"==========================================")
   print(f"Loading model.............................")
