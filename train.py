@@ -34,12 +34,12 @@ parser.add_argument('--dataset', '--d', type=str, default='cats_vs_dogs',
                     help="datset {'mnist', 'kmnist', 'emnist}. default: 'mnist'")
 parser.add_argument('--classes', type=int, default=2,
                     help="Classification picture type. default: 2")
-parser.add_argument('--buffer_size', type=int, default=2000,
+parser.add_argument('--buffer_size', type=int, default=1000,
                     help="Train dataset size. default: 5000.")
 parser.add_argument('--batch_size', type=int, default=64,
                     help="one step train dataset size. default: 64")
-parser.add_argument('--epochs', '--e', type=int, default=5,
-                    help="Train epochs. default: 5")
+parser.add_argument('--epochs', '--e', type=int, default=1,
+                    help="Train epochs. default: 1")
 parser.add_argument('--lr', '--learning_rate', type=float, default=0.0001,
                     help='float >= 0. Learning rate. default: 0.0001')
 parser.add_argument('--b1', '--beta1', type=float, default=0.9,
@@ -62,7 +62,8 @@ print(args)
 # Load pre train model MobileNetV2
 model = keras.applications.MobileNetV2(input_shape=(224, 224, 3),
                                        include_top=True,
-                                       weights='imagenet')
+                                       weights='imagenet',
+                                       classes=args.classes)
 
 model.summary()
 
@@ -86,7 +87,7 @@ optimizer = tf.optimizers.Adam(lr=args.lr,
                                decay=args.decay)
 
 # The cross entropy loss between the predicted value and the label was calculated
-entropy = tf.losses.SparseCategoricalCrossentropy()
+entropy = tf.losses.BinaryCrossentropy()
 
 # setup model compile
 model.compile(optimizer=optimizer,
