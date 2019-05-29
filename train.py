@@ -16,9 +16,10 @@
 
 # Import dataset and model network
 from dataset import load_data
+from models import AlexNet
+from tensorflow.python.keras import layers
 
 import tensorflow as tf
-from tensorflow.python import keras
 
 # plt pic
 import matplotlib.pyplot as plt
@@ -59,9 +60,22 @@ args = parser.parse_args()
 print(args)
 
 # Load pre train model MobileNetV2
-model = keras.applications.Xception(input_shape=(224, 224, 3),
-                                       weights=None,
-                                       classes=args.classes)
+model = AlexNet(input_shape=(224, 224, 3),
+                include_top=False,
+                classes=args.classes)
+
+top = tf.keras.Sequential()
+top.add(layers.Flatten(name='flatten'))
+top.add(layers.Dropout(0.3, name='drop1'))
+top.add(layers.Dense(1028, activation=tf.nn.relu, name='fc1'))
+top.add(layers.Dropout(0.3, name='drop2'))
+top.add(layers.Dense(128, activation=tf.nn.relu, name='fc2'))
+top.add(layers.Dense(args.classes, activation=tf.nn.softmax, name='predictions'))
+
+model = tf.keras.Sequential([
+  model,
+  top
+])
 
 model.summary()
 
@@ -132,7 +146,7 @@ def train():
 
 if __name__ == '__main__':
   assert args.classes == 2
-  train_dataset, test_dataset, val_dataset = load_data()
+  train_dataset, val_dataset, test_dataset = load_data()
   train()
 
 
