@@ -38,8 +38,8 @@ parser.add_argument('--buffer_size', type=int, default=1000,
                     help="Train dataset size. default: 5000.")
 parser.add_argument('--batch_size', type=int, default=64,
                     help="one step train dataset size. default: 64")
-parser.add_argument('--epochs', '--e', type=int, default=1,
-                    help="Train epochs. default: 1")
+parser.add_argument('--epochs', '--e', type=int, default=10,
+                    help="Train epochs. default: 10")
 parser.add_argument('--lr', '--learning_rate', type=float, default=0.0001,
                     help='float >= 0. Learning rate. default: 0.0001')
 parser.add_argument('--b1', '--beta1', type=float, default=0.9,
