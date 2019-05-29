@@ -67,7 +67,7 @@ def prediction(image):
   # Add the image to a batch where it's the only member.
   image = (tf.expand_dims(image, 0))
 
-  model = tf.keras.applications.MobileNetV2(input_shape=(224, 224, 3),
+  model = tf.keras.applications.Xception(input_shape=(224, 224, 3),
                                             weights=None,
                                             classes=args.classes)
 
