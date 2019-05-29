@@ -131,6 +131,6 @@ def train():
 if __name__ == '__main__':
   assert args.classes == 2
   train_dataset, val_dataset, test_dataset = load_data()
-  # train()
+  train()
 
 """loss: 0.4106 - accuracy: 0.8130 - val_loss: 0.4333 - val_accuracy: 0.8013"""
