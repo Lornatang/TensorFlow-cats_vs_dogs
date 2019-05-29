@@ -108,7 +108,7 @@ def prediction(image):
 
   predictions = model(image)
   classes = tf.argmax(predictions[0])
-  print(f"label is : {label_name[classes]}")
+  print(f"label is : {label_name[int(classes)]}")
 
   image = Image.open(args.path)
   plt.figure(figsize=(4, 4))
