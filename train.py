@@ -61,8 +61,7 @@ print(args)
 
 # Load pre train model MobileNetV2
 model = keras.applications.MobileNetV2(input_shape=(224, 224, 3),
-                                       include_top=True,
-                                       weights='imagenet',
+                                       weights=None,
                                        classes=args.classes)
 
 model.summary()
