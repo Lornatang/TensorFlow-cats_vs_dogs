@@ -59,8 +59,9 @@ args = parser.parse_args()
 print(args)
 
 # Load pre train model MobileNetV2
-model = LeNet(input_shape=(32, 32, 3),
-              classes=args.classes)
+model = tf.keras.applications.VGG16(input_shape=(224, 224, 3),
+                                    weights=None,
+                                    classes=args.classes)
 
 model.summary()
 
@@ -125,7 +126,6 @@ def train():
   plt.ylim([0, 1.0])
   plt.title('Training and Validation Loss')
   plt.xlabel('epoch')
-  plt.imshow()
   plt.show()
 
 
