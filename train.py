@@ -19,6 +19,7 @@ from dataset import load_data
 from models import AlexNet
 
 import tensorflow as tf
+from tensorflow.python import keras
 
 # plt pic
 import matplotlib.pyplot as plt
@@ -58,9 +59,26 @@ parser.add_argument('--checkpoint_dir', '--dir', type=str, default='training_che
 args = parser.parse_args()
 print(args)
 
-# check model name
-model = AlexNet(input_shape=(224, 224, 3),
-                classes=args.classes)
+# Load pre train model MobileNetV2
+model = keras.applications.MobileNetV2(input_shape=(224, 224, 3),
+                                          include_top=False,
+                                          weights='imagenet')
+
+# Freeze the convolutional base
+model.trainable = False
+
+# To generate predictions from the block of features,
+# average over the spatial 5x5 spatial locations.
+global_average_layer = tf.keras.layers.GlobalAveragePooling2D()
+
+# cat and dog .so classes is 2
+prediction_layer = keras.layers.Dense(2)
+
+model = tf.keras.Sequential([
+  model,
+  global_average_layer,
+  prediction_layer
+])
 
 model.summary()
 
@@ -133,3 +151,6 @@ if __name__ == '__main__':
   train_dataset, test_dataset, val_dataset = load_data()
 
   train()
+
+
+"""loss: 0.4106 - accuracy: 0.8130 - val_loss: 0.4333 - val_accuracy: 0.8013"""
