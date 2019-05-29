@@ -16,7 +16,7 @@
 
 # Import dataset and model network
 from dataset import load_data
-from lenet import LeNet
+from models import CNN
 
 import tensorflow as tf
 
@@ -59,9 +59,8 @@ args = parser.parse_args()
 print(args)
 
 # Load pre train model MobileNetV2
-model = tf.keras.applications.VGG16(input_shape=(224, 224, 3),
-                                    weights=None,
-                                    classes=args.classes)
+model = CNN(input_shape=(32, 32, 3),
+            classes=args.classes)
 
 model.summary()
 
@@ -132,7 +131,6 @@ def train():
 if __name__ == '__main__':
   assert args.classes == 2
   train_dataset, val_dataset, test_dataset = load_data()
-  train()
-
+  # train()
 
 """loss: 0.4106 - accuracy: 0.8130 - val_loss: 0.4333 - val_accuracy: 0.8013"""
