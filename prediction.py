@@ -83,16 +83,16 @@ def prediction(image):
 
   predictions = model(image)
   classes = tf.argmax(predictions[0])
-  print(f"label is : {classes}")
+  print(f"label is : {predictions}")
 
-  image = Image.open(args.path)
-  plt.figure(figsize=(4, 4))
-  plt.xticks([])
-  plt.yticks([])
-  plt.grid(False)
-  plt.imshow(image, cmap='gray')
-  plt.xlabel(int(classes))
-  plt.show()
+  # image = Image.open(args.path)
+  # plt.figure(figsize=(4, 4))
+  # plt.xticks([])
+  # plt.yticks([])
+  # plt.grid(False)
+  # plt.imshow(image, cmap='gray')
+  # plt.xlabel(int(classes))
+  # plt.show()
 
 
 if __name__ == '__main__':

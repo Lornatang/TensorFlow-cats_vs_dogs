@@ -202,7 +202,7 @@ def CNN(include_top=True,
     x = layers.Dense(1024, activation=tf.nn.relu, name='fc1')(x)
     x = layers.Dropout(0.3, name='drop2')(x)
     x = layers.Dense(256, activation=tf.nn.relu, name='fc2')(x)
-    x = layers.Dense(classes, activation=tf.nn.softmax, name='predictions')(x)
+    x = layers.Dense(classes, activation=tf.nn.sigmoid, name='predictions')(x)
   else:
     if pooling == 'avg':
       x = layers.GlobalAveragePooling2D()(x)
