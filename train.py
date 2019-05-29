@@ -59,7 +59,7 @@ args = parser.parse_args()
 print(args)
 
 # Load pre train model MobileNetV2
-model = keras.applications.MobileNetV2(input_shape=(224, 224, 3),
+model = keras.applications.Xception(input_shape=(224, 224, 3),
                                        weights=None,
                                        classes=args.classes)
 
