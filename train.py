@@ -16,8 +16,6 @@
 
 # Import dataset and model network
 from dataset import load_data
-from models import AlexNet
-from tensorflow.python.keras import layers
 
 import tensorflow as tf
 
@@ -32,8 +30,8 @@ import warnings
 parser = argparse.ArgumentParser('Classifier of Cats_VS_Dogs datasets!')
 parser.add_argument('--dataset', '--d', type=str, default='cats_vs_dogs',
                     help="datset {'mnist', 'kmnist', 'emnist}. default: 'mnist'")
-parser.add_argument('--classes', type=int, default=1,
-                    help="Classification picture type. default: 1")
+parser.add_argument('--classes', type=int, default=2,
+                    help="Classification picture type. default: 2")
 parser.add_argument('--buffer_size', type=int, default=1000,
                     help="Train dataset size. default: 5000.")
 parser.add_argument('--batch_size', type=int, default=64,
@@ -60,22 +58,9 @@ args = parser.parse_args()
 print(args)
 
 # Load pre train model MobileNetV2
-model = AlexNet(input_shape=(224, 224, 3),
-                include_top=False,
-                classes=args.classes)
-
-top = tf.keras.Sequential()
-top.add(layers.Flatten(name='flatten'))
-top.add(layers.Dropout(0.3, name='drop1'))
-top.add(layers.Dense(4096, activation=tf.nn.relu, name='fc1'))
-top.add(layers.Dropout(0.3, name='drop2'))
-top.add(layers.Dense(4096, activation=tf.nn.relu, name='fc2'))
-top.add(layers.Dense(args.classes, activation=tf.nn.softmax, name='predictions'))
-
-model = tf.keras.Sequential([
-  model,
-  top
-])
+model = tf.keras.applications.MobileNetV2(input_shape=(224, 224, 3),
+                                          weights=None,
+                                          classes=args.classes)
 
 model.summary()
 
@@ -99,7 +84,7 @@ optimizer = tf.optimizers.Adam(lr=args.lr,
                                decay=args.decay)
 
 # The cross entropy loss between the predicted value and the label was calculated
-entropy = tf.losses.BinaryCrossentropy()
+entropy = tf.losses.SparseCategoricalCrossentropy()
 
 # setup model compile
 model.compile(optimizer=optimizer,
@@ -145,7 +130,7 @@ def train():
 
 
 if __name__ == '__main__':
-  assert args.classes == 1
+  assert args.classes == 2
   train_dataset, val_dataset, test_dataset = load_data()
   train()
 
