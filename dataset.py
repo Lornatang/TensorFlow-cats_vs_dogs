@@ -18,7 +18,7 @@ import tensorflow as tf
 import tensorflow_datasets as tfds
 
 
-def process_image(image, label, height=32, width=32):
+def process_image(image, label, height=224, width=224):
   """ Resize the images to a fixes input size,
       and rescale the input channels to a range of [-1,1].
 
