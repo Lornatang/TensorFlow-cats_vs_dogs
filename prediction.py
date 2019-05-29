@@ -79,7 +79,7 @@ def prediction(image):
   print(f"==========================================")
   print(f"Start making predictions about the picture.")
   print(f"==========================================")
-  predictions = model.predict(image)
+  predictions = model(image)
   classes = tf.argmax(predictions[0])
   print(f"label is : {classes}")
 
