@@ -34,7 +34,7 @@ parser.add_argument('--dataset', '--d', type=str, default='cats_vs_dogs',
                     help="datset {'mnist', 'kmnist', 'emnist}. default: 'mnist'")
 parser.add_argument('--classes', type=int, default=2,
                     help="Classification picture type. default: 2")
-parser.add_argument('--buffer_size', type=int, default=10000,
+parser.add_argument('--buffer_size', type=int, default=2000,
                     help="Train dataset size. default: 5000.")
 parser.add_argument('--batch_size', type=int, default=64,
                     help="one step train dataset size. default: 64")
@@ -61,24 +61,8 @@ print(args)
 
 # Load pre train model MobileNetV2
 model = keras.applications.MobileNetV2(input_shape=(224, 224, 3),
-                                          include_top=False,
-                                          weights='imagenet')
-
-# Freeze the convolutional base
-model.trainable = False
-
-# To generate predictions from the block of features,
-# average over the spatial 5x5 spatial locations.
-global_average_layer = tf.keras.layers.GlobalAveragePooling2D()
-
-# cat and dog .so classes is 2
-prediction_layer = keras.layers.Dense(2)
-
-model = tf.keras.Sequential([
-  model,
-  global_average_layer,
-  prediction_layer
-])
+                                       include_top=True,
+                                       weights='imagenet')
 
 model.summary()
 
