@@ -18,7 +18,7 @@ import tensorflow as tf
 import tensorflow_datasets as tfds
 
 
-def process_image_with_mnist(image, label, height=224, width=224):
+def process_image(image, label, height=224, width=224):
   """ Resize the images to a fixes input size,
       and rescale the input channels to a range of [-1,1].
 
@@ -38,14 +38,14 @@ def process_image_with_mnist(image, label, height=224, width=224):
   return image, label
 
 
-def load_data(name='cats_vs_dogs', train_size=7, test_size=2, val_size=1, buffer_size=10000, batch_size=64):
+def load_data(name='cats_vs_dogs', train_size=7, val_size=2, test_size=1, buffer_size=1000, batch_size=32):
   """ load every cats_vs_dogs dataset.
 
   Args:
-    name:        "str",   dataset name.       default: 'mnist'.
+    name:        "str",   dataset name.       default: 'cats_vs_dogs'.
     train_size:  "int64", train dataset.      default:7
-    test_size:   "int64", test dataset.       default:2
-    val_size:    "int64", val dataset.        default:1
+    val_size:    "int64", val dataset.        default:2
+    test_size:   "int64", test dataset.       default:1
     buffer_size: "int64", dataset size.       default:1000.
     batch_size:  "int64", batch size.         default:32
 
@@ -53,15 +53,14 @@ def load_data(name='cats_vs_dogs', train_size=7, test_size=2, val_size=1, buffer
     dataset,
 
   """
-  split_weights = (train_size, test_size, val_size)
+  split_weights = (train_size, val_size, test_size)
   splits = tfds.Split.TRAIN.subsplit(weighted=split_weights)
-  (train_dataset, test_dataset, val_dataset) = tfds.load(name,
-                                                         split=list(splits),
-                                                         as_supervised=True)
+  train_dataset, val_dataset, test_dataset = tfds.load(name,
+                                                       split=list(splits),
+                                                       as_supervised=True)
 
-  train_dataset = train_dataset.map(process_image_with_mnist).shuffle(buffer_size).batch(batch_size)
-  test_dataset = test_dataset.map(process_image_with_mnist).batch(batch_size)
-  val_dataset = val_dataset.map(process_image_with_mnist).batch(batch_size)
+  train_dataset = train_dataset.map(process_image).shuffle(buffer_size).batch(batch_size)
+  val_dataset = val_dataset.map(process_image).batch(batch_size)
+  test_dataset = test_dataset.map(process_image).batch(batch_size)
 
-  return train_dataset, test_dataset, val_dataset
-
+  return train_dataset, val_dataset, test_dataset
