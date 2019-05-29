@@ -48,8 +48,8 @@ parser.add_argument('--batch_size', type=int, default=32,
 parser.add_argument('--epochs', '--e', type=int, default=10,
                     help="Train epochs. default: 10")
 
-parser.add_argument('--lr', '--learning_rate', type=float, default=0.0001,
-                    help='float >= 0. Learning rate. default: 0.0001')
+parser.add_argument('--lr', '--learning_rate', type=float, default=0.001,
+                    help='float >= 0. Learning rate. default: 0.001')
 parser.add_argument('--b1', '--beta1', type=float, default=0.9,
                     help="float, 0 < beta < 1. Generally close to 1. default: 0.9")
 parser.add_argument('--b2', '--beta2', type=float, default=0.999,

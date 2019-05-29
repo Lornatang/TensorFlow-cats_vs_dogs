@@ -38,6 +38,9 @@ parser.add_argument('--checkpoint_dir', '--dir', type=str, default='training_che
 args = parser.parse_args()
 
 
+label_name = {0: 'dog', 1: 'cat'}
+
+
 def process_image(image, height=args.height, width=args.width):
   """ process image ops.
 
@@ -105,7 +108,7 @@ def prediction(image):
 
   predictions = model(image)
   classes = tf.argmax(predictions[0])
-  print(f"label is : {predictions}")
+  print(f"label is : {label_name[classes]}")
 
   image = Image.open(args.path)
   plt.figure(figsize=(4, 4))
