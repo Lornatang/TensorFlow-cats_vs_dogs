@@ -12,7 +12,7 @@
 # limitations under the License.
 # ==============================================================================
 
-from models import CNN
+from models import MobileNetV2
 
 import tensorflow as tf
 
@@ -25,6 +25,12 @@ parser = argparse.ArgumentParser('Prediction mnist label')
 
 parser.add_argument('--path', type=str,
                     help='Image path, best input abs path. `./datasets/5.png`')
+parser.add_argument('--height', type=int, default=224,
+                    help='Image height. default: 224')
+parser.add_argument('--width', type=int, default=224,
+                    help='Image width.  default: 224')
+parser.add_argument('--channels', type=int, default=3,
+                    help='Image color RBG. default: 3')
 parser.add_argument('--classes', type=int, default=2,
                     help="Classification picture type. default: 2")
 parser.add_argument('--checkpoint_dir', '--dir', type=str, default='training_checkpoint',
@@ -32,11 +38,13 @@ parser.add_argument('--checkpoint_dir', '--dir', type=str, default='training_che
 args = parser.parse_args()
 
 
-def process_image(image):
+def process_image(image, height=args.height, width=args.width):
   """ process image ops.
 
     Args:
       image: 'input tensor'.
+      height: 'int64' img height.
+      width: 'int64' img width.
 
     Returns:
       tensor
@@ -51,7 +59,7 @@ def process_image(image):
   # image norm.
   image = image / 255.
   # image resize model input size.
-  image = tf.image.resize(image, (32, 32))
+  image = tf.image.resize(image, (height, width))
   return image
 
 
@@ -69,8 +77,22 @@ def prediction(image):
   # Add the image to a batch where it's the only member.
   image = (tf.expand_dims(image, 0))
 
-  model = CNN(input_shape=(32, 32, 3),
-              classes=args.classes)
+  base_model = MobileNetV2(include_top=False,
+                           input_shape=(args.height, args.width, args.channels),
+                           weights=None,
+                           classes=args.classes)
+
+  avg_pool = tf.keras.layers.GlobalAveragePooling2D()
+  fc = tf.keras.layers.Dense(args.classes,
+                             activation=tf.nn.sigmoid,
+                             use_bias=True,
+                             name='Logits')
+
+  model = tf.keras.Sequential([
+    base_model,
+    avg_pool,
+    fc
+  ])
 
   print(f"==========================================")
   print(f"Loading model.............................")
@@ -85,14 +107,14 @@ def prediction(image):
   classes = tf.argmax(predictions[0])
   print(f"label is : {predictions}")
 
-  # image = Image.open(args.path)
-  # plt.figure(figsize=(4, 4))
-  # plt.xticks([])
-  # plt.yticks([])
-  # plt.grid(False)
-  # plt.imshow(image, cmap='gray')
-  # plt.xlabel(int(classes))
-  # plt.show()
+  image = Image.open(args.path)
+  plt.figure(figsize=(4, 4))
+  plt.xticks([])
+  plt.yticks([])
+  plt.grid(False)
+  plt.imshow(image, cmap='gray')
+  plt.xlabel(int(classes))
+  plt.show()
 
 
 if __name__ == '__main__':

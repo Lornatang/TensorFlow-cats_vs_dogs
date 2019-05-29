@@ -19,6 +19,11 @@ from tensorflow.python.keras import layers
 from tensorflow.python.keras import models
 from tensorflow.python.keras import utils
 
+from keras_applications import mobilenet_v2
+
+from tensorflow.python.keras.applications import keras_modules_injection
+from tensorflow.python.util.tf_export import keras_export
+
 
 def AlexNet(include_top=True,
             input_tensor=None,
@@ -219,3 +224,10 @@ def CNN(include_top=True,
 
   model = models.Model(inputs, x, name='AlexNet')
   return model
+
+
+@keras_export('keras.applications.mobilenet_v2.MobileNetV2',
+              'keras.applications.MobileNetV2')
+@keras_modules_injection
+def MobileNetV2(*args, **kwargs):
+  return mobilenet_v2.MobileNetV2(*args, **kwargs)

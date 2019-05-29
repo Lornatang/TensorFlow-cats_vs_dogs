@@ -16,7 +16,7 @@
 
 # Import dataset and model network
 from dataset import load_data
-from models import CNN
+from models import MobileNetV2
 
 import tensorflow as tf
 
@@ -31,6 +31,14 @@ import warnings
 parser = argparse.ArgumentParser('Classifier of Cats_VS_Dogs datasets!')
 parser.add_argument('--dataset', '--d', type=str, default='cats_vs_dogs',
                     help="datset {'mnist', 'kmnist', 'emnist}. default: 'mnist'")
+
+parser.add_argument('--height', '--h', type=int, default=224,
+                    help='Image height. default: 224')
+parser.add_argument('--width', '--w', type=int, default=224,
+                    help='Image width.  default: 224')
+parser.add_argument('--channels', '--c', type=int, default=3,
+                    help='Image color RBG. default: 3')
+
 parser.add_argument('--classes', type=int, default=2,
                     help="Classification picture type. default: 2")
 parser.add_argument('--buffer_size', type=int, default=1000,
@@ -39,6 +47,7 @@ parser.add_argument('--batch_size', type=int, default=32,
                     help="one step train dataset size. default: 32")
 parser.add_argument('--epochs', '--e', type=int, default=10,
                     help="Train epochs. default: 10")
+
 parser.add_argument('--lr', '--learning_rate', type=float, default=0.0001,
                     help='float >= 0. Learning rate. default: 0.0001')
 parser.add_argument('--b1', '--beta1', type=float, default=0.9,
@@ -49,6 +58,7 @@ parser.add_argument('--epsilon', type=float, default=1e-8,
                     help="float >= 0. Fuzz factor. defaults: 1e-8.")
 parser.add_argument('--decay', type=float, default=0.,
                     help=" float >= 0. Learning rate decay over each update. defaults: 0. .")
+
 parser.add_argument('--name', type=str, default='alexnet',
                     help="Choose to use a neural network. option: {`mnist`, `alexnet`, `vgg16`, `vgg19`}")
 parser.add_argument('--checkpoint_dir', '--dir', type=str, default='training_checkpoint',
@@ -59,8 +69,22 @@ args = parser.parse_args()
 print(args)
 
 # Load pre train model MobileNetV2
-model = CNN(input_shape=(32, 32, 3),
-            classes=args.classes)
+base_model = MobileNetV2(include_top=False,
+                         input_shape=(args.height, args.width, args.channels),
+                         weights=None,
+                         classes=args.classes)
+
+avg_pool = tf.keras.layers.GlobalAveragePooling2D()
+fc = tf.keras.layers.Dense(args.classes,
+                           activation=tf.nn.sigmoid,
+                           use_bias=True,
+                           name='Logits')
+
+model = tf.keras.Sequential([
+  base_model,
+  avg_pool,
+  fc
+])
 
 model.summary()
 
