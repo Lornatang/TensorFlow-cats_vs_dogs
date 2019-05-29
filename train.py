@@ -16,7 +16,6 @@
 
 # Import dataset and model network
 from dataset import load_data
-from models import AlexNet
 
 import tensorflow as tf
 from tensorflow.python import keras
@@ -127,13 +126,13 @@ def train():
   plt.ylim([0, 1.0])
   plt.title('Training and Validation Loss')
   plt.xlabel('epoch')
+  plt.imshow()
   plt.show()
 
 
 if __name__ == '__main__':
   assert args.classes == 2
   train_dataset, test_dataset, val_dataset = load_data()
-
   train()
 
 
