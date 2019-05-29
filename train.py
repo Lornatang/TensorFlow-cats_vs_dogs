@@ -32,8 +32,8 @@ import warnings
 parser = argparse.ArgumentParser('Classifier of Cats_VS_Dogs datasets!')
 parser.add_argument('--dataset', '--d', type=str, default='cats_vs_dogs',
                     help="datset {'mnist', 'kmnist', 'emnist}. default: 'mnist'")
-parser.add_argument('--classes', type=int, default=2,
-                    help="Classification picture type. default: 2")
+parser.add_argument('--classes', type=int, default=1,
+                    help="Classification picture type. default: 1")
 parser.add_argument('--buffer_size', type=int, default=1000,
                     help="Train dataset size. default: 5000.")
 parser.add_argument('--batch_size', type=int, default=64,
@@ -67,9 +67,9 @@ model = AlexNet(input_shape=(224, 224, 3),
 top = tf.keras.Sequential()
 top.add(layers.Flatten(name='flatten'))
 top.add(layers.Dropout(0.3, name='drop1'))
-top.add(layers.Dense(1028, activation=tf.nn.relu, name='fc1'))
+top.add(layers.Dense(4096, activation=tf.nn.relu, name='fc1'))
 top.add(layers.Dropout(0.3, name='drop2'))
-top.add(layers.Dense(128, activation=tf.nn.relu, name='fc2'))
+top.add(layers.Dense(4096, activation=tf.nn.relu, name='fc2'))
 top.add(layers.Dense(args.classes, activation=tf.nn.softmax, name='predictions'))
 
 model = tf.keras.Sequential([
@@ -99,7 +99,7 @@ optimizer = tf.optimizers.Adam(lr=args.lr,
                                decay=args.decay)
 
 # The cross entropy loss between the predicted value and the label was calculated
-entropy = tf.losses.SparseCategoricalCrossentropy()
+entropy = tf.losses.BinaryCrossentropy()
 
 # setup model compile
 model.compile(optimizer=optimizer,
@@ -145,7 +145,7 @@ def train():
 
 
 if __name__ == '__main__':
-  assert args.classes == 2
+  assert args.classes == 1
   train_dataset, val_dataset, test_dataset = load_data()
   train()
 
