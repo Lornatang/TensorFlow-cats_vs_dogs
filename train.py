@@ -15,13 +15,10 @@
 """main func."""
 
 # Import dataset and model network
-from datasets import mnist, kmnist, emnist
-import tensorflow as tf
-
-from models import LeNet
+from dataset import load_data
 from models import AlexNet
-from models import VGG16
-from models import VGG19
+
+import tensorflow as tf
 
 # plt pic
 import matplotlib.pyplot as plt
@@ -133,6 +130,6 @@ def train():
 
 if __name__ == '__main__':
   assert args.classes == 2
-  train_dataset, test_dataset, val_dataset = mnist.load_data_mnist()
+  train_dataset, test_dataset, val_dataset = load_data()
 
   train()
