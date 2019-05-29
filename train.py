@@ -16,6 +16,7 @@
 
 # Import dataset and model network
 from dataset import load_data
+from lenet import LeNet
 
 import tensorflow as tf
 
@@ -58,9 +59,8 @@ args = parser.parse_args()
 print(args)
 
 # Load pre train model MobileNetV2
-model = tf.keras.applications.MobileNetV2(input_shape=(224, 224, 3),
-                                          weights=None,
-                                          classes=args.classes)
+model = LeNet(input_shape=(32, 32, 3),
+              classes=args.classes)
 
 model.summary()
 

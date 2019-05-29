@@ -13,9 +13,9 @@
 # ==============================================================================
 
 import tensorflow as tf
+from lenet import LeNet
 import matplotlib.pyplot as plt
 from PIL import Image
-
 
 import argparse
 
@@ -45,11 +45,11 @@ def process_image(image):
   # decode png to tensor
   image = tf.image.decode_image(image, channels=3)
   # convert image to float32
-  # image = tf.cast(image, tf.float32)
+  image = tf.cast(image, tf.float32)
   # image norm.
-  # image = image / 255.
+  image = image / 255.
   # image resize model input size.
-  image = tf.image.resize(image, (224, 224))
+  image = tf.image.resize(image, (32, 32))
   return image
 
 
@@ -67,9 +67,8 @@ def prediction(image):
   # Add the image to a batch where it's the only member.
   image = (tf.expand_dims(image, 0))
 
-  model = tf.keras.applications.MobileNetV2(input_shape=(224, 224, 3),
-                                            weights=None,
-                                            classes=args.classes)
+  model = LeNet(input_shape=(32, 32, 3),
+                classes=args.classes)
 
   print(f"==========================================")
   print(f"Loading model.............................")
