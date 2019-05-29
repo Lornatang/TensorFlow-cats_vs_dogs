@@ -43,13 +43,13 @@ def process_image(image):
   # read img to string.
   image = tf.io.read_file(image)
   # decode png to tensor
-  image = tf.image.decode_image(image, channels=1)
+  image = tf.image.decode_image(image, channels=3)
   # convert image to float32
   image = tf.cast(image, tf.float32)
   # image norm.
   image = image / 255.
   # image resize model input size.
-  image = tf.image.resize(image, (32, 32))
+  image = tf.image.resize(image, (224, 224))
   return image
 
 
@@ -79,7 +79,7 @@ def prediction(image):
   print(f"==========================================")
   print(f"Start making predictions about the picture.")
   print(f"==========================================")
-  predictions = model(image)
+  predictions = model.predict(image)
   classes = tf.argmax(predictions[0])
   print(f"label is : {classes}")
 
