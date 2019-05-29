@@ -34,9 +34,9 @@ parser.add_argument('--dataset', '--d', type=str, default='cats_vs_dogs',
 parser.add_argument('--classes', type=int, default=2,
                     help="Classification picture type. default: 2")
 parser.add_argument('--buffer_size', type=int, default=1000,
-                    help="Train dataset size. default: 5000.")
-parser.add_argument('--batch_size', type=int, default=64,
-                    help="one step train dataset size. default: 64")
+                    help="Train dataset size. default: 1000.")
+parser.add_argument('--batch_size', type=int, default=32,
+                    help="one step train dataset size. default: 32")
 parser.add_argument('--epochs', '--e', type=int, default=10,
                     help="Train epochs. default: 10")
 parser.add_argument('--lr', '--learning_rate', type=float, default=0.0001,
