@@ -118,13 +118,13 @@ model.compile(optimizer=optimizer,
 
 def train():
   checkpoint_prefix = os.path.join(args.checkpoint_dir, "ckpt")
-  checkpoint = tf.keras.callbacks.ModelCheckpoint(checkpoint_prefix)
-  callbacks_list = [checkpoint]
+  checkpoint = tf.train.Checkpoint(model=model)
 
   history = model.fit(train_dataset,
                       epochs=args.epochs,
-                      validation_data=val_dataset,
-                      callbacks=callbacks_list)
+                      validation_data=val_dataset)
+
+  checkpoint.save(checkpoint_prefix)
 
   acc = history.history['accuracy']
   val_acc = history.history['val_accuracy']
