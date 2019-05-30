@@ -16,7 +16,7 @@
 
 # Import dataset and model network
 from dataset import load_data
-from models import MobileNetV2
+from models import *
 
 import tensorflow as tf
 
