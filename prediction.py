@@ -43,6 +43,22 @@ args = parser.parse_args()
 label_names = get_label_name()
 label_names = label_names.features['label'].int2str
 
+base_model = MobileNetV2(include_top=False,
+                         input_shape=(args.height, args.width, args.channels),
+                         weights='imagenet',
+                         classes=args.classes)
+
+avg_pool = tf.keras.layers.GlobalAveragePooling2D()
+fc = tf.keras.layers.Dense(args.classes,
+                           activation=tf.nn.softmax,
+                           name='Logits')
+
+model = tf.keras.Sequential([
+  base_model,
+  avg_pool,
+  fc
+])
+
 
 def process_image(image, height=args.height, width=args.width):
   """ process image ops.
@@ -82,22 +98,6 @@ def prediction(image):
   image = process_image(image)
   # Add the image to a batch where it's the only member.
   image = (tf.expand_dims(image, 0))
-
-  base_model = MobileNetV2(include_top=False,
-                           input_shape=(args.height, args.width, args.channels),
-                           weights='imagenet',
-                           classes=args.classes)
-
-  avg_pool = tf.keras.layers.GlobalAveragePooling2D()
-  fc = tf.keras.layers.Dense(args.classes,
-                             activation=tf.nn.softmax,
-                             name='Logits')
-
-  model = tf.keras.Sequential([
-    base_model,
-    avg_pool,
-    fc
-  ])
 
   print(f"==========================================")
   print(f"Loading model.............................")
