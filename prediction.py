@@ -24,7 +24,7 @@ import argparse
 parser = argparse.ArgumentParser('Prediction mnist label')
 
 parser.add_argument('--path', type=str,
-                    help='Image path, best input abs path. `./datasets/5.png`')
+                    help='Image path, best input abs path. `./datasets/cat.png`')
 parser.add_argument('--height', type=int, default=224,
                     help='Image height. default: 224')
 parser.add_argument('--width', type=int, default=224,
@@ -35,9 +35,11 @@ parser.add_argument('--classes', type=int, default=2,
                     help="Classification picture type. default: 2")
 parser.add_argument('--checkpoint_dir', '--dir', type=str, default='training_checkpoint',
                     help="Model save path.")
+parser.add_argument('--dis', type=bool, default=False,
+                    help='display matplotlib? default: False.')
 args = parser.parse_args()
 
-label_name = {0: 'dog', 1: 'cat'}
+label_name = ['cat', 'dog']
 
 
 def process_image(image, height=args.height, width=args.width):
@@ -108,14 +110,15 @@ def prediction(image):
   classes = tf.argmax(predictions[0])
   print(f"label is : {label_name[int(classes)]}")
 
-  image = Image.open(args.path)
-  plt.figure(figsize=(4, 4))
-  plt.xticks([])
-  plt.yticks([])
-  plt.grid(False)
-  plt.imshow(image, cmap='gray')
-  plt.xlabel(int(classes))
-  plt.show()
+  if args.dis:
+    image = Image.open(args.path)
+    plt.figure(figsize=(4, 4))
+    plt.xticks([])
+    plt.yticks([])
+    plt.grid(False)
+    plt.imshow(image, cmap='gray')
+    plt.xlabel(label_name[int(classes)])
+    plt.show()
 
 
 if __name__ == '__main__':
