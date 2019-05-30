@@ -77,7 +77,7 @@ base_model = MobileNetV2(include_top=False,
 
 avg_pool = tf.keras.layers.GlobalAveragePooling2D()
 fc = tf.keras.layers.Dense(args.classes,
-                           activation= tf.nn.softmax,
+                           activation=tf.nn.softmax,
                            name='Logits')
 
 model = tf.keras.Sequential([
