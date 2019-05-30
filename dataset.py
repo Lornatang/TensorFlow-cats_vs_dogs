@@ -64,3 +64,26 @@ def load_data(name='cats_vs_dogs', train_size=7, val_size=2, test_size=1, buffer
   test_dataset = test_dataset.map(process_image).batch(batch_size)
 
   return train_dataset, val_dataset, test_dataset
+
+
+def get_label_name(name='cats_vs_dogs', train_size=7, val_size=2, test_size=1):
+  """ load every cats_vs_dogs dataset.
+
+  Args:
+    name:        "str",   dataset name.       default: 'cats_vs_dogs'.
+    train_size:  "int64", train dataset.      default:7
+    val_size:    "int64", val dataset.        default:2
+    test_size:   "int64", test dataset.       default:1
+
+  Returns:
+    dataset,
+
+  """
+  split_weights = (train_size, val_size, test_size)
+  splits = tfds.Split.TRAIN.subsplit(weighted=split_weights)
+  (_, _, _), info = tfds.load(name,
+                              split=list(splits),
+                              with_info=True,
+                              as_supervised=True)
+
+  return info

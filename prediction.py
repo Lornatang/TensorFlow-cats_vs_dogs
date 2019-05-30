@@ -13,6 +13,7 @@
 # ==============================================================================
 
 from models import *
+from dataset import get_label_name
 
 import tensorflow as tf
 
@@ -39,7 +40,8 @@ parser.add_argument('--dis', type=bool, default=False,
                     help='display matplotlib? default: False.')
 args = parser.parse_args()
 
-label_name = ['cat', 'dog']
+label_names = get_label_name()
+label_names = label_names.features['label'].int2str
 
 
 def process_image(image, height=args.height, width=args.width):
@@ -107,8 +109,8 @@ def prediction(image):
   print(f"==========================================")
 
   predictions = model(image)
-  classes = tf.argmax(predictions[0])
-  print(f"label is : {label_name[int(classes)]}")
+  classes = int(tf.argmax(predictions[0]))
+  print(f"Label is : {label_names(classes)}")
 
   if args.dis:
     image = Image.open(args.path)
@@ -117,7 +119,7 @@ def prediction(image):
     plt.yticks([])
     plt.grid(False)
     plt.imshow(image, cmap='gray')
-    plt.xlabel(label_name[int(classes)])
+    plt.xlabel(label_names(classes))
     plt.show()
 
 
