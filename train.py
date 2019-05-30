@@ -120,7 +120,7 @@ def train():
   checkpoint_prefix = os.path.join(args.checkpoint_dir, "ckpt")
   checkpoint = tf.keras.callbacks.ModelCheckpoint(checkpoint_prefix,
                                                   monitor='val_acc',
-                                                  save_best_only=True,
+                                                  save_best_only=False,
                                                   mode='auto',
                                                   period=1)
   callbacks_list = [checkpoint]
