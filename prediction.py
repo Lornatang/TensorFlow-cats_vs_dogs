@@ -12,7 +12,7 @@
 # limitations under the License.
 # ==============================================================================
 
-from models import DenseNet121
+from models import *
 
 import tensorflow as tf
 
@@ -80,7 +80,7 @@ def prediction(image):
   # Add the image to a batch where it's the only member.
   image = (tf.expand_dims(image, 0))
 
-  base_model = DenseNet121(include_top=False,
+  base_model = MobileNetV2(include_top=False,
                            input_shape=(args.height, args.width, args.channels),
                            weights='imagenet',
                            classes=args.classes)
