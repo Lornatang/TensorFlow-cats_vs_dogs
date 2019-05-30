@@ -37,7 +37,6 @@ parser.add_argument('--checkpoint_dir', '--dir', type=str, default='training_che
                     help="Model save path.")
 args = parser.parse_args()
 
-
 label_name = {0: 'dog', 1: 'cat'}
 
 
@@ -84,7 +83,6 @@ def prediction(image):
                            input_shape=(args.height, args.width, args.channels),
                            weights='imagenet',
                            classes=args.classes)
-
 
   avg_pool = tf.keras.layers.GlobalAveragePooling2D()
   fc = tf.keras.layers.Dense(args.classes,
