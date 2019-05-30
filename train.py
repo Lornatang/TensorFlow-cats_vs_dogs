@@ -107,7 +107,7 @@ optimizer = tf.optimizers.Adam(lr=args.lr,
                                decay=args.decay)
 
 # The cross entropy loss between the predicted value and the label was calculated
-entropy = tf.losses.SparseCategoricalCrossentropy()
+entropy = tf.losses.BinaryCrossentropy()
 
 # setup model compile
 model.compile(optimizer=optimizer,
