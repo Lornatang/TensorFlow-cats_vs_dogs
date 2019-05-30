@@ -118,11 +118,7 @@ model.compile(optimizer=optimizer,
 
 def train():
   checkpoint_prefix = os.path.join(args.checkpoint_dir, "ckpt")
-  checkpoint = tf.keras.callbacks.ModelCheckpoint(checkpoint_prefix,
-                                                  monitor='val_acc',
-                                                  save_best_only=False,
-                                                  mode='auto',
-                                                  period=1)
+  checkpoint = tf.keras.callbacks.ModelCheckpoint(checkpoint_prefix)
   callbacks_list = [checkpoint]
 
   history = model.fit(train_dataset,
