@@ -39,8 +39,8 @@ parser.add_argument('--width', '--w', type=int, default=224,
 parser.add_argument('--channels', '--c', type=int, default=3,
                     help='Image color RBG. default: 3')
 
-parser.add_argument('--classes', type=int, default=2,
-                    help="Classification picture type. default: 2")
+parser.add_argument('--classes', type=int, default=1,
+                    help="Classification picture type. default: 1")
 parser.add_argument('--buffer_size', type=int, default=1000,
                     help="Train dataset size. default: 1000.")
 parser.add_argument('--batch_size', type=int, default=32,
@@ -48,8 +48,8 @@ parser.add_argument('--batch_size', type=int, default=32,
 parser.add_argument('--epochs', '--e', type=int, default=10,
                     help="Train epochs. default: 10")
 
-parser.add_argument('--lr', '--learning_rate', type=float, default=0.001,
-                    help='float >= 0. Learning rate. default: 0.001')
+parser.add_argument('--lr', '--learning_rate', type=float, default=0.0001,
+                    help='float >= 0. Learning rate. default: 0.0001')
 parser.add_argument('--b1', '--beta1', type=float, default=0.9,
                     help="float, 0 < beta < 1. Generally close to 1. default: 0.9")
 parser.add_argument('--b2', '--beta2', type=float, default=0.999,
@@ -71,14 +71,13 @@ print(args)
 # Load pre train model MobileNetV2
 base_model = MobileNetV2(include_top=False,
                          input_shape=(args.height, args.width, args.channels),
-                         weights=None,
+                         weights='imagenet',
                          classes=args.classes)
 
+base_model.trainable = False
+
 avg_pool = tf.keras.layers.GlobalAveragePooling2D()
-fc = tf.keras.layers.Dense(args.classes,
-                           activation=tf.nn.sigmoid,
-                           use_bias=True,
-                           name='Logits')
+fc = tf.keras.layers.Dense(args.classes, name='Logits')
 
 model = tf.keras.Sequential([
   base_model,

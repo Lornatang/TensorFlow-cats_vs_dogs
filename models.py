@@ -20,6 +20,8 @@ from tensorflow.python.keras import models
 from tensorflow.python.keras import utils
 
 from keras_applications import mobilenet_v2
+from keras_applications import vgg16
+from keras_applications import densenet
 
 from tensorflow.python.keras.applications import keras_modules_injection
 from tensorflow.python.util.tf_export import keras_export
@@ -231,3 +233,18 @@ def CNN(include_top=True,
 @keras_modules_injection
 def MobileNetV2(*args, **kwargs):
   return mobilenet_v2.MobileNetV2(*args, **kwargs)
+
+
+@keras_export('keras.applications.vgg16.VGG16',
+              'keras.applications.VGG16')
+@keras_modules_injection
+def VGG16(*args, **kwargs):
+  return vgg16.VGG16(*args, **kwargs)
+
+
+@keras_export('keras.applications.densenet.DenseNet121',
+              'keras.applications.DenseNet121')
+@keras_modules_injection
+def DenseNet121(*args, **kwargs):
+  return densenet.DenseNet121(*args, **kwargs)
+

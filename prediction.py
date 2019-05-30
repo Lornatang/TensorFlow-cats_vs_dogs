@@ -12,7 +12,7 @@
 # limitations under the License.
 # ==============================================================================
 
-from models import MobileNetV2
+from models import DenseNet121
 
 import tensorflow as tf
 
@@ -31,8 +31,8 @@ parser.add_argument('--width', type=int, default=224,
                     help='Image width.  default: 224')
 parser.add_argument('--channels', type=int, default=3,
                     help='Image color RBG. default: 3')
-parser.add_argument('--classes', type=int, default=2,
-                    help="Classification picture type. default: 2")
+parser.add_argument('--classes', type=int, default=1,
+                    help="Classification picture type. default: 1")
 parser.add_argument('--checkpoint_dir', '--dir', type=str, default='training_checkpoint',
                     help="Model save path.")
 args = parser.parse_args()
@@ -80,16 +80,15 @@ def prediction(image):
   # Add the image to a batch where it's the only member.
   image = (tf.expand_dims(image, 0))
 
-  base_model = MobileNetV2(include_top=False,
+  base_model = DenseNet121(include_top=False,
                            input_shape=(args.height, args.width, args.channels),
-                           weights=None,
+                           weights='imagenet',
                            classes=args.classes)
 
+  base_model.trainable = False
+
   avg_pool = tf.keras.layers.GlobalAveragePooling2D()
-  fc = tf.keras.layers.Dense(args.classes,
-                             activation=tf.nn.sigmoid,
-                             use_bias=True,
-                             name='Logits')
+  fc = tf.keras.layers.Dense(args.classes, name='Logits')
 
   model = tf.keras.Sequential([
     base_model,
