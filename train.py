@@ -39,8 +39,8 @@ parser.add_argument('--width', '--w', type=int, default=224,
 parser.add_argument('--channels', '--c', type=int, default=3,
                     help='Image color RBG. default: 3')
 
-parser.add_argument('--classes', type=int, default=1,
-                    help="Classification picture type. default: 1")
+parser.add_argument('--classes', type=int, default=2,
+                    help="Classification picture type. default: 2")
 parser.add_argument('--buffer_size', type=int, default=1000,
                     help="Train dataset size. default: 1000.")
 parser.add_argument('--batch_size', type=int, default=32,
@@ -74,10 +74,11 @@ base_model = MobileNetV2(include_top=False,
                          weights='imagenet',
                          classes=args.classes)
 
-base_model.trainable = False
 
 avg_pool = tf.keras.layers.GlobalAveragePooling2D()
-fc = tf.keras.layers.Dense(args.classes, name='Logits')
+fc = tf.keras.layers.Dense(args.classes,
+                           activation= tf.nn.softmax,
+                           name='Logits')
 
 model = tf.keras.Sequential([
   base_model,
@@ -116,13 +117,18 @@ model.compile(optimizer=optimizer,
 
 
 def train():
+  checkpoint_prefix = os.path.join(args.checkpoint_dir, "ckpt")
+  checkpoint = tf.keras.callbacks.ModelCheckpoint(checkpoint_prefix,
+                                                  monitor='val_acc',
+                                                  save_best_only=True,
+                                                  mode='auto',
+                                                  period=1)
+  callbacks_list = [checkpoint]
+
   history = model.fit(train_dataset,
                       epochs=args.epochs,
-                      validation_data=val_dataset)
-
-  checkpoint_prefix = os.path.join(args.checkpoint_dir, "ckpt")
-  checkpoint = tf.train.Checkpoint(model=model)
-  checkpoint.save(file_prefix=checkpoint_prefix)
+                      validation_data=val_dataset,
+                      callbacks=callbacks_list)
 
   acc = history.history['accuracy']
   val_acc = history.history['val_accuracy']
@@ -152,7 +158,7 @@ def train():
 
 
 if __name__ == '__main__':
-  assert args.classes == 1
+  assert args.classes == 2
   train_dataset, val_dataset, test_dataset = load_data()
   train()
 
