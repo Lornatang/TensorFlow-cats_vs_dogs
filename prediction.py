@@ -31,8 +31,8 @@ parser.add_argument('--width', type=int, default=224,
                     help='Image width.  default: 224')
 parser.add_argument('--channels', type=int, default=3,
                     help='Image color RBG. default: 3')
-parser.add_argument('--classes', type=int, default=1,
-                    help="Classification picture type. default: 1")
+parser.add_argument('--classes', type=int, default=2,
+                    help="Classification picture type. default: 2")
 parser.add_argument('--checkpoint_dir', '--dir', type=str, default='training_checkpoint',
                     help="Model save path.")
 args = parser.parse_args()
@@ -85,10 +85,11 @@ def prediction(image):
                            weights='imagenet',
                            classes=args.classes)
 
-  base_model.trainable = False
 
   avg_pool = tf.keras.layers.GlobalAveragePooling2D()
-  fc = tf.keras.layers.Dense(args.classes, name='Logits')
+  fc = tf.keras.layers.Dense(args.classes,
+                             activation=tf.nn.softmax,
+                             name='Logits')
 
   model = tf.keras.Sequential([
     base_model,
