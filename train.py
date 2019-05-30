@@ -152,7 +152,7 @@ def train():
 
 
 if __name__ == '__main__':
-  assert args.classes == 2
+  assert args.classes == 1
   train_dataset, val_dataset, test_dataset = load_data()
   train()
 
